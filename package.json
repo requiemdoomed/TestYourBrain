@@ -1,0 +1,30 @@
+{
+  "name": "testyourbrain-web",
+  "version": "2.0.0",
+  "description": "AI quiz generator from your own study material, running entirely in the browser.",
+  "author": {
+    "name": "Swayam Shakya",
+    "email": "swayamshakya000@gmail.com"
+  },
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve": "node scripts/serve.js",
+    "test": "node --test tests/*.test.js",
+    "test:e2e": "node tests/e2e/run.js",
+    "css": "tailwindcss -i src/styles.css -o assets/app.css --minify",
+    "css:watch": "tailwindcss -i src/styles.css -o assets/app.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "4.3.3",
+    "playwright": "1.64.1",
+    "tailwindcss": "4.3.3"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "contributors": [
+    "Swayam Shakya"
+  ]
+}

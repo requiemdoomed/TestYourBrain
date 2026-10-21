@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TestYourBrain</title>
+    <meta
+      name="description"
+      content="Upload lecture slides, PDFs, Word documents or notes and get a quiz whose every question links back to the slide or page it came from."
+    />
+    <meta name="author" content="Swayam Shakya" />
+    <meta name="theme-color" content="#f6f8fc" />
+    <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+    <link rel="preload" href="assets/fonts/literata-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="assets/fonts/public-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="assets/app.css" />
+    <script type="module" src="src/main.js"></script>
+  </head>
+  <body class="flex min-h-full flex-col">
+    <div id="app" class="flex min-h-full flex-1 flex-col">
+      <noscript>
+        <p style="padding: 2rem; font-family: system-ui, sans-serif">TestYourBrain needs JavaScript switched on.</p>
+      </noscript>
+      <p id="boot" style="padding: 2rem; font-family: system-ui, sans-serif; color: #5b6785">Loading TestYourBrain…</p>
+    </div>
+    <script>
+      // Opened straight from the disk (file://)? Browsers don't run app modules from there.
+      if (location.protocol === "file:") {
+        document.getElementById("boot").innerHTML =
+          "<strong>Open TestYourBrain through a web server.</strong><br />Browsers block apps opened straight from a file. " +
+          "In this folder run <code>python3 -m http.server 8000</code> (or <code>npx serve</code>) and open " +
+          "<code>http://localhost:8000</code>, or publish the folder with GitHub Pages.";
+      }
+    </script>
+  </body>
+</html>

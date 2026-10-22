@@ -133,128 +133,12 @@ The engine is a line-by-line port of the Python services. `tests/parity.test.js`
 recorded from the Python code: sentence splitting, chunking, hashing vectors, topic boundaries and names, and
 key terms and definitions all come out identical.
 
-## Project layout
-
-```
-TestYourBrain-web/
-├── index.html               the page; loads assets/app.css and src/main.js
-├── src/
-│   ├── main.js              app shell and routes (#/library, #/quizzes/12, ...)
-│   ├── pages/               home, sign in, library, document, quiz builder, quiz, print, take, results,
-│   │                        shared quiz, settings
-│   ├── components/          header and shared UI, uploader, source panel, confirm dialog
-│   ├── lib/                 API client, hash router, data hooks, auth context
-│   ├── server/              the in-browser "backend": API routes, IndexedDB, background jobs, settings,
-│   │                        share links
-│   ├── engine/              extraction, chunking, embeddings, topics, retrieval, question writing
-│   │                        (model + rule-based), grading
-│   └── styles.css           Tailwind source (theme, components)
-├── assets/                  compiled app.css, fonts, icon
-├── vendor/                  bundled libraries (Preact, pdf.js, JSZip, Tesseract.js); see vendor/README.md
-├── samples/                 sample lecture files (PDF, PPTX, DOCX, Markdown, scanned PDF)
-├── tests/                   unit tests, parity fixtures, end-to-end browser test with a fake model API
-├── scripts/serve.js         local web server (`npm run serve`)
-└── .github/workflows/       GitHub Pages deployment and the test run
-```
-
-## Run it on your computer
-
-Browsers don't run app modules from a file opened by double-clicking, so serve the folder:
-
-```bash
-cd TestYourBrain-web
-python3 -m http.server 8000        # or: npm run serve   (Node.js 20+, no install needed)
-```
-
-Open <http://localhost:8000>, create an account, and click **Load sample material** to try it with five sample
-lecture files, or upload your own.
-
-## Publish it on GitHub Pages
-
-### With GitHub Desktop (easiest)
-
-1. Unzip the project somewhere easy to find, for example `Documents/TestYourBrain-web`. The folder is already a
-   Git repository with one commit by Swayam Shakya.
-2. In GitHub Desktop, choose **File → Add local repository…**, pick the `TestYourBrain-web` folder and click
-   **Add repository**.
-3. Click **Publish repository**. Keep the name `TestYourBrain-web` (or pick another), untick **Keep this code
-   private** if you want a free public site, and click **Publish repository**.
-4. On github.com, open the new repository's **Settings → Pages**. Under **Build and deployment → Source**, choose
-   **GitHub Actions**.
-5. Open the **Actions** tab. Re-run the **Deploy to GitHub Pages** workflow if it already ran and failed before
-   step 4. When it finishes, the site is live at `https://<your-username>.github.io/TestYourBrain-web/`.
-
-Later changes: edit files, then **Commit to main** and **Push origin** in GitHub Desktop. The site updates
-itself within a minute or two.
-
-### From the command line
-
-```bash
-cd TestYourBrain-web
-git remote add origin https://github.com/<your-username>/TestYourBrain-web.git
-git push -u origin main
-```
-
-Then follow steps 4 and 5 above. Without Actions: in **Settings → Pages** choose **Deploy from a branch**, then
-`main` and `/ (root)`. The site is static, so either way works. The **Tests** workflow runs the unit and browser
-tests on every push.
-
-## Use an AI model (optional)
-
-Open **Settings → Who writes the questions**:
-
-| Choice | What to fill in |
-| --- | --- |
-| Built-in generator | Nothing. Works offline; simpler questions. |
-| Anthropic Claude | An Anthropic API key. Model `claude-sonnet-5-5` by default (change it in the Model field). |
-| OpenAI or compatible | An OpenAI key (model `gpt-4o-mini` by default), or a server address such as `http://localhost:11434/v1` for Ollama (start Ollama with `OLLAMA_ORIGINS=*`). |
-
-Click **Test connection** to check it. The key is stored in this browser only and sent only to the provider you
-chose. Use your own computer for this: anyone using the same browser profile could read the key. With a model
-connected, topic naming and short-answer grading use the model too. If a model call fails, the built-in generator
-takes over, and the quiz page says so.
-
-## Embeddings and OCR
-
-- **Embeddings**: the all-MiniLM-L6-v2 sentence-transformer is used to find topics and relevant passages. It is
-  downloaded once (about 25 MB, via jsDelivr and Hugging Face) and then cached. When it can't be downloaded
-  (offline, blocked network), the app falls back to hashing vectors automatically. It can be switched off in
-  Settings.
-- **OCR**: Tesseract.js and its English model are bundled in `vendor/`, so scanned pages are read offline too.
-  Pages with almost no text are OCR'd automatically.
-
 ## Sharing with classmates
 
 **Create share link** on a quiz page makes a link that contains the whole quiz in compressed form (in the part
 after `#`, which browsers never send to a server). Anyone who opens it can take the quiz on their own device. At
 the end they get a **result link** to send back. When you open it, their score appears under **Classmates** on
 your quiz. Classmates see the quoted passage for each answer, but not your files.
-
-## Tests
-
-```bash
-npm install                 # once: Tailwind CLI and Playwright
-npm test                    # unit tests: engine, grading, model path with a fake API, parity with the Python code
-npx playwright install chromium   # once
-npm run test:e2e            # the whole app in a headless browser
-```
-
-The end-to-end test signs up, loads the five sample files (including OCR of the scanned PDF), makes a quiz from
-two files, opens a source, edits a question and takes the quiz. It then checks the results and retakes the missed
-questions, makes a practice quiz and opens the worksheet. Next, a "classmate" on a phone-sized screen takes the
-shared quiz and sends the result back. Finally it connects a local fake of the Anthropic API to check the AI
-path, and checks that no page scrolls sideways at phone width. Set `SCREENSHOTS=folder` to save screenshots.
-
-After changing Tailwind classes in `src/`, rebuild the stylesheet with `npm run css`.
-
-## Limits of a browser-only app
-
-- Data lives in one browser. Use **Settings → Download backup** to move it to another computer.
-- Slide images aren't rendered for PowerPoint files (the full-stack version uses LibreOffice for that). The
-  slide's text is shown instead. PDF pages and images are shown as images.
-- Very large files (hundreds of pages) work, but take longer than on a server, especially with OCR.
-
----
 
 © 2026 Swayam Shakya. MIT licensed, see [LICENSE](LICENSE). Bundled libraries keep their own licences
 ([vendor/README.md](vendor/README.md)).

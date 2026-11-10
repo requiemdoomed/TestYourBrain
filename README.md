@@ -1,6 +1,7 @@
 # [TestYourBrain](https://requiemdoomed.github.io/TestYourBrain/)
 
 **AI quiz generator from your own study material, running entirely in the browser**
+
 Author: **Swayam Shakya** · AI, Education · MIT licence
 
 Upload lecture slides, PDFs, Word documents or notes, and TestYourBrain turns them into a quiz. It extracts
